@@ -1,5 +1,10 @@
 .App {
   text-align: center;
+  width: 500px;
+  height: 500px;
+  position: relative;
+  margin: auto;
+  border: 10px red;
 }
 
 .App-logo {
@@ -35,4 +40,53 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+
+.content{
+  height: 90%;
+  top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+  outline: 1px solid rgb(199, 23, 23);
+  position: relative;
+}
+.content div{
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+  outline: 1px solid rgb(199, 23, 23);
+}
+.buttons{
+  outline: 1px solid rgb(199, 23, 23);
+  height: 10%;
+  text-align: center;
+}
+button{
+  margin-top: auto;
+  display: inline-block;
+}
+.content2{
+  height: 90%;
+  top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+  outline: 1px solid rgb(199, 23, 23);
+  position: relative;
+}
+.content2 div{
+  width: 10%;
+  height: 10%;
+  display: inline-block;
+  background-color: red;
+  margin: 5px;
 }

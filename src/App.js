@@ -1,23 +1,36 @@
 import logo from './logo.svg';
 import './App.css';
+import { useState } from 'react';
 
 function App() {
+  const [count, setCount] = useState(0);
+  const [str, setStr] = useState('text');
+  const [arr, setArr] = useState([1, 2]);
+  const handleAddOne = ()=>{
+    setCount((prevCount)=>{
+      return prevCount + 1
+    })
+  }
+  const handleAddString = ()=>{
+    setStr((prevStr)=>{
+      return prevStr + 'text'.repeat(count)
+    })
+  }
+  const handleAddArray = ()=>{
+    setArr((prevArr)=>{
+      let randomNum = Math.floor(Math.random()*10)
+      return [...prevArr, randomNum]
+    })
+  }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div>{count}</div>
+      <div>{str}</div>
+      <div>{arr}</div>
+      {console.log(arr)}
+      <button onClick={handleAddOne}>1</button>
+      <button onClick={handleAddString}>2</button>
+      <button onClick={handleAddArray}>3</button>
     </div>
   );
 }

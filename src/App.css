@@ -42,7 +42,6 @@
   }
 }
 
-
 .content{
   height: 90%;
   top: 0;
@@ -89,4 +88,21 @@ button{
   display: inline-block;
   background-color: red;
   margin: 5px;
+}
+
+.content2 .green{
+  background-color: green;
+}
+.content2 .black{
+  background-color: black;
+  color: white;
+}
+
+.content2 .we{
+  width: 200px;
+  height: 100px;
+}
+.content2 .timer{
+  width: 100px;
+  height: 50px;
 }

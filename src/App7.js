@@ -31,6 +31,7 @@ function App7() {
         DefenseDefense:[0, 0],
         nonenone:[0, 0]
         })
+    const g = qff;
 
     const summHP = (HP, rul) => {
         let newHP = HP + rul

@@ -1,18 +1,17 @@
 import logo from './logo.svg';
 import './App.css';
-import { Profiler, useEffect,  useCallback, useState } from 'react';
+import { Profiler, useEffect,  useCallback, useState, useMemo } from 'react';
 import Game from "./Game.js";
 import GameOver from "./GameOver.js";
+
 function App7() {
    
     const [HP, setHP] = useState([100, 100]);
-    const [botAction, setBotaction] = useState("none");
-    const [playerAction, setplayeraction] = useState("none");
+    const [botAction, setBotAction] = useState("none");
+    const [playerAction, setPlayerAction] = useState("none");
     const [count, setCount] = useState(0);
-    const [over, setOver] = useState(false)
     const actionBot = ["Attack", "Defense", "Skip", "Spell"];
-
-    const actionrules = ({
+    const actionRules = ({
         AttackDefense:[-5, 0],
         DefenseAttack:[0, -5],
         AttackSpell:[-10, -5],
@@ -30,47 +29,41 @@ function App7() {
         SkipSkip:[10, 10],
         DefenseDefense:[0, 0],
         nonenone:[0, 0]
-        })
-
+    })
+    
+    const maxHP = 100;
+    
     const summHP = (HP, rul) => {
-        let newHP = HP + rul
-        if(newHP <= 0){
-            newHP = 0
-            setOver(()=>{
-                return true
-            })
-        }
-        if(newHP >= 100){
-            newHP = 100
-        }
-       
-        return newHP
+        return HP + rul >= maxHP ? maxHP : HP + rul 
+    }
+
+    function randomGenerateAction(min = 0, max = actionBot.length - 1){
+        const index = Math.floor(Math.random() - min * (max + 1));
+        return actionBot[index]
     }
 
     useEffect(() => {
-        setBotaction(()=>{
-            const max = actionBot.length - 1;
-            const index = Math.floor(Math.random() * (max + 1));
-            return actionBot[index]
+        setBotAction(()=>{
+            randomGenerateAction()
         })
        
         setHP((prevHP) =>{
             const newHP = [...prevHP]
             let key = playerAction + botAction 
-            console.log(key)
-            newHP[0] = summHP(newHP[0], actionrules[key][0]) 
-            newHP[1] = summHP(newHP[1], actionrules[key][1]) 
+            newHP[0] = summHP(newHP[0], actionRules[key][0]) 
+            newHP[1] = summHP(newHP[1], actionRules[key][1]) 
             return newHP
         })
         }, [count])
 
+        const isGameOver = useMemo(((currentHP) => currentHP <= 0 ), [HP])
        
         const gameOrOver = () =>{
-            return over ? <GameOver HP = {HP}/> : <Game  HP = {HP}/> 
+            return isGameOver ? <GameOver HP = {HP}/> : <Game  HP = {HP}/> 
         }
 
         const handleAction = (event) =>{
-            setplayeraction(()=>{
+            setPlayerAction(()=>{
                 return event.target.name
             })
         

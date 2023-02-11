@@ -3,86 +3,81 @@ import './App.css';
 import { Profiler, useEffect,  useCallback, useState, useMemo } from 'react';
 import Game from "./Game.js";
 import GameOver from "./GameOver.js";
+import { maxHP } from './gameRules';
 
 function App7() {
-   
-    const [HP, setHP] = useState([100, 100]);
+    const [HP, setHP] = useState([maxHP, maxHP]);
+    const [score, setScore] = useState(0);
     const [botAction, setBotAction] = useState("none");
     const [playerAction, setPlayerAction] = useState("none");
     const [count, setCount] = useState(0);
-    const actionBot = ["Attack", "Defense", "Skip", "Spell"];
-    const actionRules = ({
-        AttackDefense:[-5, 0],
-        DefenseAttack:[0, -5],
-        AttackSpell:[-10, -5],
-        SpellAttack:[-5, -10],
-        SpellDefense:[0, -15],
-        DefenseSpell:[-15, 0],
-        SkipAttack:[-10, 0],
-        AttackSkip:[0, -10],
-        SkipDefense:[10, 0],
-        DefenseSkip:[0, 10],
-        SkipSpell:[-5, 0],
-        SpellSkip:[0, -5],
-        AttackAttack:[-10, -10],
-        SpellSpell:[-15, -15],
-        SkipSkip:[10, 10],
-        DefenseDefense:[0, 0],
-        nonenone:[0, 0]
+    const [clock, setClock] = useState("00:00:00");
+    const [time, setTime] = useState(0);
+    const [timer, setTimer] = useState(null)
+    const [combo, setCombo] = useState({
+        value:0,
+        count:0
     })
-    
-    const maxHP = 100;
-    
-    const summHP = (HP, rul) => {
-        return HP + rul >= maxHP ? maxHP : HP + rul 
-    }
 
-    function randomGenerateAction(min = 0, max = actionBot.length - 1){
-        const index = Math.floor(Math.random() - min * (max + 1));
-        return actionBot[index]
-    }
+    useEffect(()=> {
 
-    useEffect(() => {
-        setBotAction(()=>{
-            randomGenerateAction()
+        setTimer((prevTimer) => {
+            if(prevTimer){
+                clearInterval(prevTimer)
+            }
+            return setInterval(() => {
+                setTime((prevTime) =>{
+                    return prevTime + 1
+                })
+            }, 1000)
         })
-       
-        setHP((prevHP) =>{
-            const newHP = [...prevHP]
-            let key = playerAction + botAction 
-            newHP[0] = summHP(newHP[0], actionRules[key][0]) 
-            newHP[1] = summHP(newHP[1], actionRules[key][1]) 
-            return newHP
-        })
-        }, [count])
 
-        const isGameOver = useMemo(((currentHP) => currentHP <= 0 ), [HP])
-       
-        const gameOrOver = () =>{
-            return isGameOver ? <GameOver HP = {HP}/> : <Game  HP = {HP}/> 
-        }
+        }, [])   
 
-        const handleAction = (event) =>{
-            setPlayerAction(()=>{
-                return event.target.name
-            })
+    useEffect(()=> {
+
+        let h = (time / 3600) > 9 ? parseInt(time / 3600) : "0" + parseInt(time / 3600)
+        let m = (time % 3600 / 60) > 9 ? parseInt(time % 3600 / 60) : "0" + parseInt(time % 3600 / 60)
+        let s = time > 9 ? time % 3600 % 60 : "0" + time % 3600 % 60  
+        setClock(s + ":" + m + ":" + h)
+    
+    }, [time])
+
+    const isGameOver = useMemo(() => {
         
-            setCount((prevCount)=>{
-                return prevCount + 1
-            })
+        return (HP[0] <= 0) || (HP[1] <= 0)
+    
+    }, [HP]) 
+
+    const over = () => {
+        setHP([100, 100])
+        setScore(0)
+        setBotAction("none")
+        setPlayerAction("none")
+        setCount(0)
+        clearInterval(timer)
+        setClock("00:00:00")
+        setTime(0)
+        setCombo({
+            value:0,
+            count:0
+        })
+    }  
+
+    const gameOrOver = () =>{
+        if(isGameOver){
+            return <GameOver HP = {HP} Score = {score} over = {over} setTimer ={setTimer} count={count}/> 
         }
+        else{
+            return <Game combo = {combo} setCombo = {setCombo}  HP = {HP} setHP={setHP} Score = {score} setScore={setScore} botAction = {botAction} setBotAction = {setBotAction} playerAction = {playerAction} setPlayerAction = {setPlayerAction} count = {count} setCount = {setCount} over = {over}/> 
+        }
+        
+    }
 
     return (
         <div className="App">
-           
-            {gameOrOver()}
-
-            <div className='form'>
-                <button name='Attack' onClick={handleAction}>Атаковать</button>
-                <button name='Defense' onClick={handleAction}>Защититься</button>
-                <button name='Skip' onClick={handleAction}>Пропустить</button>
-                <button name='Spell' onClick={handleAction}>Заклинание</button>
-            </div>
+            <div>{clock}</div>     
+            {gameOrOver()}      
         </div>
 
     )

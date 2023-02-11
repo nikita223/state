@@ -83,13 +83,35 @@ button{
   position: relative;
 }
 .content2 div{
-  width: 10%;
-  height: 10%;
-  display: inline-block;
-  background-color: red;
   margin: 5px;
 }
+.Score{
+  height: 10%;
+}
+.characters{
+  height: 90%;
+}
+.player, .bot{
+  width: 120px;
+  height: 120px;
+  display: inline-block;
+}
+.player div{
 
+  width: 120px;
+  height: 120px;
+  background-image: url(Idle.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.bot div{
+  width: 120px;
+  height: 120px;
+  background-repeat: no-repeat;
+  background-size: 1800%;
+  background-image: url(Viking-Sheet.png);
+  transform: scaleX(-1);
+}
 .content2 .green{
   background-color: green;
 }
@@ -105,4 +127,65 @@ button{
 .content2 .timer{
   width: 100px;
   height: 50px;
+}
+.form{
+  width: auto;
+  height: 100px;
+}
+.Attack{
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  background-image: url(sword.png);
+  background-size:100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.Defense{
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  background-image: url(shield.png);
+  background-size:100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.Spell{
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  background-image: url(spell.png);
+  background-size:100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.Skip{
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  background-image: url(skip.png);
+  background-size:100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.fail{
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  background-image: url(flag.png);
+  background-size:100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.conteyner{
+  height: 300px;
+}
+.over{
+  height: 25px;
+  border: 1px solid red;
+  border-bottom:2px solid red ;
+}
+.over:hover{
+  border: 1px solid red;
+  margin-top: 7px;
 }

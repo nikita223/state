@@ -31,6 +31,7 @@ function App7() {
                 })
             }, 1000)
         })
+    const g = qff;
 
         }, [])   
 

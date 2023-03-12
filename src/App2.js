@@ -46,7 +46,8 @@ function App2() {
       <div className="App">
         <div className='content2'>
         {array.map((index)=>(
-      <div key = {index}></div>
+      <div key = {index}>
+      </div>
       ))}
         </div>
       <input id="inp" onChange={handleEditValue}  ></input>

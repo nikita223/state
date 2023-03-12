@@ -1,7 +1,7 @@
 .App {
   text-align: center;
-  width: 500px;
-  height: 500px;
+  width: 100vw;
+  height: 100vh;
   position: relative;
   margin: auto;
   border: 10px red;
@@ -61,10 +61,8 @@
 	left: 0;
 	right: 0;
 	margin: auto;
-  outline: 1px solid rgb(199, 23, 23);
 }
 .buttons{
-  outline: 1px solid rgb(199, 23, 23);
   height: 10%;
   text-align: center;
 }
@@ -73,14 +71,14 @@ button{
   display: inline-block;
 }
 .content2{
-  height: 90%;
   top: 0;
 	bottom: 0;
 	left: 0;
 	right: 0;
-	margin: auto;
-  outline: 1px solid rgb(199, 23, 23);
-  position: relative;
+  height: 80%;
+  display: flex;
+  flex-direction: row;
+  justify-content:center;
 }
 .content2 div{
   margin: 5px;
@@ -89,29 +87,18 @@ button{
   height: 10%;
 }
 .characters{
-  height: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 40%;
 }
 .player, .bot{
-  width: 120px;
-  height: 120px;
-  display: inline-block;
+  display: flex;
+  height: 100%;
+  flex-direction: row;
+  justify-content: center;
 }
-.player div{
 
-  width: 120px;
-  height: 120px;
-  background-image: url(Idle.png);
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-.bot div{
-  width: 120px;
-  height: 120px;
-  background-repeat: no-repeat;
-  background-size: 1800%;
-  background-image: url(Viking-Sheet.png);
-  transform: scaleX(-1);
-}
 .content2 .green{
   background-color: green;
 }
@@ -129,56 +116,115 @@ button{
   height: 50px;
 }
 .form{
-  width: auto;
-  height: 100px;
+  height: 10%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+.buttonsGroup{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  gap: 1%;
 }
 .Attack{
   display: inline-block;
-  width: 50px;
-  height: 50px;
-  background-image: url(sword.png);
+  width: 70px;
+  height: 70px;
+  background-image: url(battle-axe\ 8.png);
   background-size:100%;
   background-repeat: no-repeat;
   background-position: center;
+  position: relative;
+  
 }
+
+.active:before{
+  position: absolute;
+  display: block;
+  content: "";
+  width: 0px;
+  height: 0px;
+  outline:  2px solid red;
+  animation: border 1.5s infinite  linear;
+  animation-delay:0.1s;
+}
+.active:after{
+  position: absolute;
+  display: block;
+  content: "";
+  width: 0px;
+  height: 0px;
+  outline:  2px solid red;
+  animation-delay:0s;
+  animation: border 1.5s infinite  linear;
+}
+
+.Attack_active{
+
+}
+
+@keyframes border {
+  0% {height:0; left:1%; width: 0px; outline:  2px solid red;}
+  25% {left:1%; width: 70px; outline: 2px solid red;}
+  35%{left:100%; width: 0px; height: 0px; outline:  2px solid red;}
+  50%{height: 70px; top:0px; width: 0px;  outline:  2px solid red;}
+  65%{top: 70px; left:70px; height: 0px; width: 0px; outline:  2px solid red;}
+  75%{width: 70px; left: 1%;  outline: 2px solid red;}
+  85%{width: 0px; height: 0; top:70px; outline: 2px solid red;}
+  95%{height: 70px; top:0px; outline:  2px solid red;}
+  100% {left:1%; width: 0px; outline:  2px solid red;}
+}
+
 .Defense{
   display: inline-block;
-  width: 50px;
-  height: 50px;
-  background-image: url(shield.png);
+  width: 70px;
+  height: 70px;
+  background-image: url(sabers-choc\ 1.png);
   background-size:100%;
   background-repeat: no-repeat;
   background-position: center;
+  position: relative;
 }
 .Spell{
   display: inline-block;
-  width: 50px;
-  height: 50px;
-  background-image: url(spell.png);
+  width: 70px;
+  height: 70px;
+  background-image: url(fairy-wand\ 1.png);
   background-size:100%;
   background-repeat: no-repeat;
   background-position: center;
+  position: relative;
 }
 .Skip{
   display: inline-block;
-  width: 50px;
-  height: 50px;
-  background-image: url(skip.png);
+  width: 70px;
+  height: 70px;
+  background-image: url(fast-forward-button\ 1.png);
   background-size:100%;
   background-repeat: no-repeat;
   background-position: center;
+  position: relative;
 }
 .fail{
   display: inline-block;
-  width: 50px;
-  height: 50px;
+  width: 70px;
+  height: 70px;
   background-image: url(flag.png);
   background-size:100%;
   background-repeat: no-repeat;
   background-position: center;
+  position: relative;
 }
 .conteyner{
-  height: 300px;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #3c4049;
 }
 .over{
   height: 25px;
@@ -188,4 +234,106 @@ button{
 .over:hover{
   border: 1px solid red;
   margin-top: 7px;
+}
+.img_player{
+  background-image: url(pngfind\ 1.png);
+  width: 70%;
+  height: 100%;
+  background-position: center;
+  background-repeat:no-repeat;
+  background-size: 100%;
+}
+.img_bot{
+  width: 30%;
+  height: 80%;
+  background-image: url(pngaaa\ 2.png);
+  background-position: center;
+  background-repeat:no-repeat;
+  background-size: 100%;
+}
+.actionBar{
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.iconsAction{
+  width: 100%;
+  font-size: 1.5em;
+  display: flex;
+  text-align: center;
+  gap: 1%;
+}
+.imgIcon{
+  width: 50px;
+  height: 50px;
+  background-image: url(holy-grail\ 1.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  text-align: center;
+}
+.enemies{
+  height: 50%;
+}
+.hpBar{
+  font-size: 2em;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  height: 20%;
+}
+
+.hpBar div{
+  text-align: center;
+  margin-top:auto;
+  height: 100%;
+}
+.icons{
+  background-image: url(glass-heart.png);
+  background-size: 80%;
+  background-repeat: no-repeat;
+  width: 60px;
+}
+.infoPanel{
+  display: flex;
+  justify-content: space-around;
+  flex-grow: 2;
+  width: 100%;
+}
+.calc{
+  display: flex;
+  width: 50%;
+  height: 100%;
+  font-size: 2em;
+  text-align: center;
+  justify-content: center;
+  gap: 1%;
+}
+.combo{
+  display: flex;
+  width: 25%;
+  height: 100%;
+  font-size: 2em;
+  text-align: center;
+  justify-content: flex-end;
+  gap: 1%;
+}
+.combo div{
+  width: 30%;
+}
+.attack_combo{
+  background-image: url(pngaaa\ 1.png);
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
+.protect_combo{
+  background-image: url(shield.png);
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
+.room{
+  width: 25%;
+}
+.active_bot{
+  filter: drop-shadow(0px 0px 10px rgb(196, 14, 14));
 }

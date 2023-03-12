@@ -6,7 +6,7 @@ import GameOver from "./GameOver.js";
 import { maxHP, maxDamage, formatTime } from './gameRules';
 function App7() {
     const [HP, setHP] = useState([maxHP, maxHP, maxHP]);
-    
+    //qffwf
     const [score, setScore] = useState(0);
     const [botAction, setBotAction] = useState("none");
     const [playerAction, setPlayerAction] = useState("none");

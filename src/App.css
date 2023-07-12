@@ -1,3 +1,5 @@
+
+
 .App {
   text-align: center;
   width: 100vw;
@@ -133,7 +135,7 @@ button{
   display: inline-block;
   width: 70px;
   height: 70px;
-  background-image: url(battle-axe\ 8.png);
+  background-image: url(img/battle-axe\ 8.png);
   background-size:100%;
   background-repeat: no-repeat;
   background-position: center;
@@ -182,7 +184,7 @@ button{
   display: inline-block;
   width: 70px;
   height: 70px;
-  background-image: url(sabers-choc\ 1.png);
+  background-image: url(img/sabers-choc\ 1.png);
   background-size:100%;
   background-repeat: no-repeat;
   background-position: center;
@@ -192,7 +194,7 @@ button{
   display: inline-block;
   width: 70px;
   height: 70px;
-  background-image: url(fairy-wand\ 1.png);
+  background-image: url(img/fairy-wand\ 1.png);
   background-size:100%;
   background-repeat: no-repeat;
   background-position: center;
@@ -202,7 +204,7 @@ button{
   display: inline-block;
   width: 70px;
   height: 70px;
-  background-image: url(fast-forward-button\ 1.png);
+  background-image: url(img/fast-forward-button\ 1.png);
   background-size:100%;
   background-repeat: no-repeat;
   background-position: center;
@@ -212,7 +214,7 @@ button{
   display: inline-block;
   width: 70px;
   height: 70px;
-  background-image: url(flag.png);
+  background-image: url(img/flag.png);
   background-size:100%;
   background-repeat: no-repeat;
   background-position: center;
@@ -236,7 +238,7 @@ button{
   margin-top: 7px;
 }
 .img_player{
-  background-image: url(pngfind\ 1.png);
+  background-image: url(img/pngfind\ 1.png);
   width: 70%;
   height: 100%;
   background-position: center;
@@ -246,7 +248,7 @@ button{
 .img_bot{
   width: 30%;
   height: 80%;
-  background-image: url(pngaaa\ 2.png);
+  background-image: url(img/pngaaa\ 2.png);
   background-position: center;
   background-repeat:no-repeat;
   background-size: 100%;
@@ -267,7 +269,7 @@ button{
 .imgIcon{
   width: 50px;
   height: 50px;
-  background-image: url(holy-grail\ 1.png);
+  background-image: url(img/holy-grail\ 1.png);
   background-size: contain;
   background-repeat: no-repeat;
   text-align: center;
@@ -275,7 +277,7 @@ button{
 .enemies{
   height: 50%;
 }
-.hpBar{
+.botsHPBar{
   font-size: 2em;
   display: flex;
   flex-direction: row;
@@ -283,13 +285,13 @@ button{
   height: 20%;
 }
 
-.hpBar div{
+.botsHPBar div{
   text-align: center;
   margin-top:auto;
   height: 100%;
 }
 .icons{
-  background-image: url(glass-heart.png);
+  background-image: url(img/glass-heart.png);
   background-size: 80%;
   background-repeat: no-repeat;
   width: 60px;
@@ -322,12 +324,12 @@ button{
   width: 30%;
 }
 .attack_combo{
-  background-image: url(pngaaa\ 1.png);
+  background-image: url(img/pngaaa\ 1.png);
   background-repeat: no-repeat;
   background-size: 100%;
 }
 .protect_combo{
-  background-image: url(shield.png);
+  background-image: url(img/shield.png);
   background-repeat: no-repeat;
   background-size: 100%;
 }

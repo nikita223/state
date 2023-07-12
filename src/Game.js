@@ -1,118 +1,91 @@
 import classNames from "classnames";
 import { useEffect, useState, memo } from "react";
 import './App.css';
-import {takeHistoryActions, actions, summHP, randomGenerateAction, StatusHeros, maxDamage, comboIf, formatTime} from './gameRules';
-function Game({time, combo, setCombo, HP, setHP, Score, setScore, botAction, setBotAction, playerAction, setPlayerAction, count, setCount}){
+import {updatePlayerState, DISPLAY_ACTIONS_BOT_MAXIMUM_COUNT, setDefaultActionsBots, COUNT_BOTS, collectActionsBot, updateBotState, DISPLAY_ACTIONS_PLAYERS_MAXIMUM_COUNT, drawBotsActionHistory, ACTIONS, calculateHPChange, randomizeAction, CharacterStatuses, MAX_DAMAGE, updateCombo, formatTime} from './gameRules';
+import { useGameStore } from './store/store.js';
+
+function Game({pref, setStateGame, playerHP, setPlayerHP, time, combo, setCombo, botsHP, setBotsHP, botAction, setBotAction, playerAction, setPlayerAction, count, setCount}){
+    const score = useGameStore((state) => state.score)
+    const setScore = useGameStore((state) => state.changeScore)
     const [buttonActive, setButtonActive] = useState({button:'none', status:'deactive'});
     const [botID, setBotID] = useState(null)
-    const [historyActions, setHistoryAction] = useState([
-        [],   
-        [],
-        []
-    ])
+    const [botsActionsHIstory, setBotsHistoryAction] = useState(setDefaultActionsBots())
+    const [playerActionsHistory, setPlayerHistoryAction] = useState([null, null, null, null, null])
     useEffect(() => {
-            
+        console.log(pref)    
         setBotAction(()=>{   
-            return randomGenerateAction()
+            return randomizeAction()
         })
-        console.log(botID)
-        if(botID){
-            setHistoryAction((prev)=>{
-                const newPrev = [...prev];
-                if(prev[botID].length === 3){
-                    newPrev[botID] = [...prev[botID].filter((element, index) => (index > 0)), botAction]
-                }
-                else{
-                    newPrev[botID] = [...prev[botID], botAction]
-                }
-                if(prev[0].length === 5){
-                    newPrev[0] = [...prev[0].filter((element, index) => (index > 0)), playerAction]
-                }
-                else{
-                    newPrev[0] = [...prev[0], playerAction]
-                }
-                return newPrev
-            })
-        }
 
-        console.log(historyActions)
-        const statusPlayer = new StatusHeros("player", actions[playerAction][botAction].HP[0], actions[playerAction][botAction].Score)
-        const statusBot = new StatusHeros("bot", actions[playerAction][botAction].HP[1], null)
-        console.log(statusPlayer)
+        const statusPlayer = new CharacterStatuses("player", ACTIONS[playerAction][botAction].HP[0], ACTIONS[playerAction][botAction].Score)
+        const statusBot = new CharacterStatuses("bot", ACTIONS[playerAction][botAction].HP[1], null)
 
-        setHP((prevHP) =>{
-            let newHP = [...prevHP]
-            newHP[0] = summHP(prevHP[0], statusPlayer.HP)
-            newHP[botID] = summHP(prevHP[botID], statusBot.HP)
-            return newHP
+        updateBotState(setBotsHistoryAction, botID, botAction)
+        updatePlayerState(setPlayerHistoryAction, playerAction)
+       
+        setBotsHP((prevbotsHP) =>{
+            let newbotsHP = [...prevbotsHP]
+            newbotsHP[botID] = calculateHPChange(prevbotsHP[botID], statusBot.HP)
+            return newbotsHP
         }        
            )
-        console.log(botID) 
-        console.log(historyActions)  
+        setPlayerHP((prevPlayerHP)=>{
+          return calculateHPChange(prevPlayerHP, statusPlayer.HP)
+        })
         setCombo((prevCombo) =>{   
-            if(statusBot.HP === -maxDamage){
+            if(statusBot.HP === -MAX_DAMAGE){
                 if(statusPlayer.HP < 0){
-                    return comboIf(prevCombo.Attack.count + 1, 0)   
+                    return updateCombo(prevCombo.Attack.count + 1, 0)   
                 }
-                return comboIf(prevCombo.Attack.count + 1, prevCombo.Defense.count)
+                return updateCombo(prevCombo.Attack.count + 1, prevCombo.Defense.count)
             }
             if(statusPlayer.status === "Protected"){
-                return comboIf(0, prevCombo.Defense.count + 1)
+                return updateCombo(0, prevCombo.Defense.count + 1)
             }
-                return comboIf(0, 0)
+                return updateCombo(0, 0)
         })
-            
-        setScore((prevScore)=>{
-            if(statusBot.HP === -maxDamage){
-                return prevScore + (combo.Attack.count * statusPlayer.score)   
-            }
-            if(statusPlayer.status === "Protected"){
-                return prevScore + (combo.Defense.count * statusPlayer.score)   
-            }
-            return prevScore + statusPlayer.score
-        })
+        let nextScore = score
+        if(statusBot.HP === -MAX_DAMAGE){
+            nextScore = nextScore + (combo.Attack.count * statusPlayer.score)   
+        }
+        else if(statusPlayer.status === "Protected"){
+            nextScore = nextScore + (combo.Defense.count * statusPlayer.score)   
+        }
+        else {
+            nextScore = nextScore + statusPlayer.score
+        }
+        setScore(nextScore)
+        
         }, [count])
 
+        useEffect(()=>{
+            if(playerHP <= 0 || botsHP.some((x) => (x <= 0))){
+                setStateGame(()=>
+                ("GameOver"))
+            }
+        }, [count])
 
     const handleAction = (action) =>{
-        if(buttonActive.button === action && buttonActive.status === 'Active' && botID){
         if(action === "Fail") {
-            setHP((prevHP)=>{
-              const newHP = prevHP.filter((x, index)=>{
-                    if(index > 0){
-                        return x
-                    }
-                })
-                HP = [0, ...newHP]
-                return HP
+            setPlayerHP(0)
+            setCount((prevCount)=>{
+            return prevCount + 1
             })
         }
-        else{
-            setPlayerAction(()=>{
-            return action
-        })
-        
+        if(buttonActive.button === action && buttonActive.status === 'Active' && botID){
+            setPlayerAction(action) 
             setCount((prevCount)=>{
             return prevCount + 1
         })
     }
-
-}
-        setButtonActive(()=>{
-            return {
+        setButtonActive({
                 button:action,
                 status:'Active'
-            }
-        })
-        }
-
-    const handleСhoice = (id) =>{
-        setBotID(()=>{
-            return id
-        })
-        
+    })
     }
-
+    const handleСhoice = (id) =>{
+        setBotID(id)
+    }
     return(
         <div className="conteyner">
         <div className="infoPanel">
@@ -122,53 +95,40 @@ function Game({time, combo, setCombo, HP, setHP, Score, setScore, botAction, set
             </div>
             <div className="calc">
                 <div className="time">{formatTime(time)}</div>  
-                <div className="Score">SCORE: {Score}</div>
+                <div className="Score">SCORE: {score}</div>
             </div>
             <div className="room">Комната 1</div>
         </div>
         <div className='content2'>
             <div className="characters">
-                <div className="hpBar">
+                <div className="botsHPBar">
                     <div className="icons"></div>
-                    <div> {HP[0]}</div>
+                    <div> {playerHP}</div>
                 </div>
                 <div className='player'>
                     <div className="img_player"></div>
-                    <div className="actionBar">
-                    <div className="iconsAction">
-                        <div>1</div>
-                        <div className="imgIcon"></div>
-                        </div>
-                        <div className="iconsAction">
-                        <div>2</div>
-                        <div className="imgIcon"></div>
-                        </div>
-                        <div className="iconsAction">
-                        <div>3</div>
-                        <div className="imgIcon"></div>
-                        </div>  
-                    </div>
+                    {drawBotsActionHistory(playerActionsHistory)}
                 </div>
             </div>  
             <div className="characters">
                 <div className="enemies">
-                <div className="hpBar">
-                    <div>{HP[1]}</div>
+                <div className="botsHPBar">
+                    <div>{botsHP[0]}</div>
                     <div className="icons"></div>
                     </div>
                 <div className='bot'>
-                {takeHistoryActions(historyActions[1])}
-                    <div className={classNames("img_bot", {"active_bot":botID === 1})} id="1"  onClick={() => handleСhoice(1)}></div> 
+                {drawBotsActionHistory(botsActionsHIstory[0])}
+                    <div className={classNames("img_bot", {"active_bot":botID === "0"})} id="1"  onClick={() => handleСhoice("0")}></div> 
                 </div>
                 </div>
                 <div className="enemies">
-                <div className="hpBar">
+                <div className="botsHPBar">
                     <div className="icons"></div>
-                    <div>{HP[2]}</div>
+                    <div>{botsHP[1]}</div>
                     </div>
                 <div className='bot'>
-                {takeHistoryActions(historyActions[2])}
-                    <div className={classNames("img_bot", {"active_bot":botID === 2})} id="2" onClick={() => handleСhoice(2)}></div>    
+                {drawBotsActionHistory(botsActionsHIstory[1])}
+                    <div className={classNames("img_bot", {"active_bot":botID === "1"})} id="2" onClick={() => handleСhoice("1")}></div>    
                 </div>
                 </div>   
             </div>   

@@ -1,9 +1,17 @@
 import classNames from "classnames";
-const maxHP = 100;
-const maxDamage = 15;  
-const actionBot = ["Attack", "Defense", "Skip", "Spell"];
-    
-const actions = ({
+
+const MAX_HP = 100;
+const MAX_DAMAGE = 15;
+const COUNT_BOTS = 2;  
+const DISPLAY_ACTIONS_PLAYERS_MAXIMUM_COUNT = 5;
+const DISPLAY_ACTIONS_BOT_MAXIMUM_COUNT = 3;
+const ACTIONS_BOT = ["Attack", "Defense", "Skip", "Spell"];  
+const PREFERENCE = {
+    "Легко":"для тех, кто хочет просто расслабиться и наслаждаться игрой. Вы получаете много преимуществ и поддержки.",
+    "Средне":"для тех, кто хочет испытать себя и игру. Вы получаете справедливые условия и некоторую поддержку.",
+    "Тяжело":"для тех, кто хочет преодолеть себя и игру. Вы получаете минимум преимуществ и поддержки."
+} 
+const ACTIONS = ({
     Attack:{
         Attack:{
             HP:[-10, -10],
@@ -83,30 +91,45 @@ const actions = ({
          }
     }
 })
-         
-    const summHP = (currentHP, editHP) => {
-        if(editHP !== 0){
-            currentHP = currentHP + editHP >=maxHP ? maxHP : currentHP + editHP;
+
+function setDefaultActionsBots(){
+    let array = new Array(DISPLAY_ACTIONS_BOT_MAXIMUM_COUNT)
+    for(let i = DISPLAY_ACTIONS_BOT_MAXIMUM_COUNT - 1; i >= 0; i--){
+        array[i] = null;
+    }
+    let arr = [];
+    for(let i = COUNT_BOTS; i > 0; i--){
+        arr = [...arr, array]
+    }
+    return arr
+}
+    const calculateHPChange = (current, changeValue) => {
+        if(changeValue === 0){
+            return current
         }
-        return currentHP
+        return current = current + changeValue >= MAX_HP ? MAX_HP : current + changeValue;
     }
    
-    const randomGenerateAction = (min = 0, max = actionBot.length - 1) => {
+    const randomizeAction = (min = 0, max = ACTIONS_BOT.length - 1) => {
         const index = Math.floor((Math.random() - min) * (max + 1));
-        return actionBot[index]
+        return ACTIONS_BOT[index]
     }
  
-    function StatusHeros(role, editHP, score){
+    function collectActionsBot(countBots, countActions){
+       return new Array(countBots, countActions)
+    }
+
+    function CharacterStatuses(role, HP, score){
         this.role = role
-        this.HP = editHP
+        this.HP = HP
         this.score = score
-        if(editHP > 0){
+        if(HP > 0){
             this.status = "healing"   
         }
-        if(editHP === 0){
+        if(HP === 0){
             this.status = "Protected"
         }
-        if(editHP < 0){
+        if(HP < 0){
             this.status = "Damage"
         }
        }
@@ -118,10 +141,10 @@ const actions = ({
         return String(seconds + ":" + minutes + ":" + hours)
     }
 
-    function comboIf(countAttak, countDefense){
+    function updateCombo(countAttak, countDefense){
         const newCombo = {
             Attack:{
-                value:maxDamage,
+                value:MAX_DAMAGE,
                 count:countAttak
             },
             Defense:{
@@ -133,18 +156,56 @@ const actions = ({
     }
 
 
-    function takeHistoryActions(history){  
+    function drawBotsActionHistory(history){  
         return(
             <div className="actionBar">
-            {history.map((element, index) =>(    
-                <div key={index}  className="iconsAction">
-                <div>{index + 1}</div>
-                 <div className={classNames('imgIcon', element)} ></div>
+                {history.map((element, index) =>{      
+                    if(element !== null){
+                    return(
+                    <div key={index}  className="iconsAction">
+                        <div>{index + 1}</div>
+                        <div className={classNames('imgIcon', element)} ></div>
+                    </div>)
+                    }
+                }
+                )}    
             </div>
-                ))
-                }    
-                </div>
         )
-        
     }
-export {takeHistoryActions, actionBot, actions, maxHP, maxDamage, StatusHeros, summHP, randomGenerateAction, formatTime, comboIf}
+
+
+    function updateBotState(setHistoryAction, botID, botAction){
+        if(botID === null) {
+            return
+        }
+        setHistoryAction((prevBotsActionsHIstory)=>{
+            const newBotsActionsHIstory = prevBotsActionsHIstory;
+            newBotsActionsHIstory[parseInt(botID)] = newBotsActionsHIstory[parseInt(botID)].map((value, index, array)=>{
+               
+                if(index === (DISPLAY_ACTIONS_BOT_MAXIMUM_COUNT - 1)){
+                    return botAction
+                 }
+                
+                return array[index + 1] ? array[index + 1]  : null;
+            })
+            
+            return newBotsActionsHIstory;
+            })
+    }
+    
+    function updatePlayerState(setPlayerHistoryAction, playerAction){
+        setPlayerHistoryAction((prevActionsHIstory)=>{
+           
+            const newActionsHIstory = prevActionsHIstory.map((value, index, array)=>{
+               
+                if(index === (DISPLAY_ACTIONS_PLAYERS_MAXIMUM_COUNT - 1)){
+                    return playerAction === 'none' ? null : playerAction
+                 }
+                
+                return array[index + 1] ? array[index + 1]  : null;
+            })
+            console.log(prevActionsHIstory)
+            return newActionsHIstory;
+            })
+    }
+export {PREFERENCE, updatePlayerState, updateBotState, setDefaultActionsBots, collectActionsBot, COUNT_BOTS, DISPLAY_ACTIONS_PLAYERS_MAXIMUM_COUNT, DISPLAY_ACTIONS_BOT_MAXIMUM_COUNT, drawBotsActionHistory, ACTIONS_BOT, ACTIONS, MAX_HP, MAX_DAMAGE, CharacterStatuses, calculateHPChange, randomizeAction, formatTime, updateCombo}
